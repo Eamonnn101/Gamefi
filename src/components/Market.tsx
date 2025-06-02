@@ -14,7 +14,7 @@ const RARITY_COLORS = {
 };
 
 export function Market() {
-  const { balance, listedNFTs, buyNFT } = useGameStore();
+  const { balance, listedNFTs, buyNFT, unlistNFT } = useGameStore();
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [showFeeInfo, setShowFeeInfo] = useState(false);
 
@@ -41,6 +41,13 @@ export function Market() {
       } catch (error) {
         alert(error instanceof Error ? error.message : '购买失败！');
       }
+    }
+  };
+
+  const handleUnlist = (nftId: string) => {
+    if (confirm('确定要下架这个NFT吗？')) {
+      unlistNFT(nftId);
+      setSelectedNFT(null);
     }
   };
 
@@ -146,6 +153,12 @@ export function Market() {
                 disabled={!selectedNFT.price || balance < selectedNFT.price}
               >
                 确认购买
+              </button>
+              <button 
+                className="btn btn-danger"
+                onClick={() => handleUnlist(selectedNFT.id)}
+              >
+                下架NFT
               </button>
               <button 
                 className="btn"

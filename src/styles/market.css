@@ -78,11 +78,54 @@
 .modal-actions {
   display: flex;
   gap: var(--spacing-sm);
-  margin-top: var(--spacing-lg);
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
 }
 
-.modal-actions .btn {
-  flex: 1;
+.modal-actions button {
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+/* 主要按钮（蓝色）- 用于上架和确认购买 */
+.modal-actions .btn-primary {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.modal-actions .btn-primary:hover {
+  background-color: #40a9ff !important;
+}
+
+/* 危险按钮（红色）- 用于下架 */
+.modal-actions .btn-danger {
+  background-color: var(--error-color) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.modal-actions .btn-danger:hover {
+  background-color: #ff7875 !important;
+}
+
+/* 次要按钮（灰色）- 用于关闭 */
+.modal-actions .btn:not(.btn-primary):not(.btn-danger) {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.modal-actions .btn:not(.btn-primary):not(.btn-danger):hover {
+  background-color: var(--bg-hover) !important;
+}
+
+.modal-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* 输入框样式 */

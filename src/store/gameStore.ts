@@ -14,6 +14,7 @@ interface GameState {
   updateBalance: (amount: number) => void;
   listNFT: (nftId: string, price: number) => void;
   buyNFT: (nftId: string) => void;
+  unlistNFT: (nftId: string) => void;
   toggleSynthesisSelection: (nftId: string) => void;
   clearSynthesisSelection: () => void;
   synthesizeNFTs: () => Promise<void>;
@@ -57,6 +58,17 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     set((state) => ({
       balance: state.balance - totalCost,
+      nfts: [...state.nfts, { ...listedNFT, price: undefined }],
+      listedNFTs: state.listedNFTs.filter((n) => n.id !== nftId)
+    }));
+  },
+
+  unlistNFT: (nftId) => {
+    const state = get();
+    const listedNFT = state.listedNFTs.find((n) => n.id === nftId);
+    if (!listedNFT) return;
+    
+    set((state) => ({
       nfts: [...state.nfts, { ...listedNFT, price: undefined }],
       listedNFTs: state.listedNFTs.filter((n) => n.id !== nftId)
     }));
