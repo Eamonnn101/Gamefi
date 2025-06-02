@@ -1,0 +1,154 @@
+.market-container {
+  padding: var(--spacing-lg);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.market-header h2 {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.market-header .balance {
+  font-size: 1.2em;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.market-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.fee-info {
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.fee-info h3 {
+  margin: 0 0 var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.fee-info p {
+  margin: var(--spacing-sm) 0;
+  color: var(--text-secondary);
+}
+
+.card-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.card-actions .btn {
+  flex: 1;
+}
+
+.fee-details {
+  background: var(--background-light);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.fee-details p {
+  margin: var(--spacing-xs) 0;
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
+.market-grid {
+  min-height: 400px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  background: var(--background-light);
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+}
+
+.market-grid .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.market-grid .nft-card {
+  position: relative;
+  padding: var(--spacing-md);
+  background: white;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.market-grid .nft-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.market-grid .nft-card .price {
+  font-size: 1.2em;
+  color: var(--primary-color);
+  font-weight: bold;
+  margin: var(--spacing-sm) 0;
+}
+
+.market-grid .nft-card button {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+}
+
+.market-grid .nft-card button:disabled {
+  background: var(--disabled-color);
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .market-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: center;
+    padding: 0 var(--spacing-md);
+  }
+
+  .market-grid {
+    padding: 0 var(--spacing-md);
+  }
+} 
