@@ -187,7 +187,7 @@ export function Game() {
 
       <div className="game-controls">
         <button 
-          className={`btn ${showSynthesis ? 'btn-primary' : ''}`}
+          className="btn btn-primary"
           onClick={() => {
             setShowSynthesis(!showSynthesis);
             if (!showSynthesis) {
