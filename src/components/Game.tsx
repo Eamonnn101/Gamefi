@@ -25,23 +25,36 @@ export function Game() {
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [listPrice, setListPrice] = useState('');
   const [showSynthesis, setShowSynthesis] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDraw = async () => {
     if (balance < TICKET_PRICE) {
-      alert('余额不足！');
+      setError('余额不足！');
       return;
     }
 
     setIsDrawing(true);
+    setError(null);
     updateBalance(-TICKET_PRICE);
 
-    // 模拟抽奖动画
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // 模拟抽奖动画
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-    const nft = LotterySystem.drawNFT();
-    addNFT(nft);
-    setLastDrawnNFT(nft);
-    setIsDrawing(false);
+      console.log('开始抽奖...');
+      const nft = await LotterySystem.drawNFT();
+      console.log('抽奖成功:', nft);
+      
+      addNFT(nft);
+      setLastDrawnNFT(nft);
+    } catch (error) {
+      console.error('抽奖失败:', error);
+      const errorMessage = error instanceof Error ? error.message : '抽奖失败，请稍后重试！';
+      setError(errorMessage);
+      updateBalance(TICKET_PRICE); // 退还抽奖费用
+    } finally {
+      setIsDrawing(false);
+    }
   };
 
   const handleListNFT = () => {
@@ -110,16 +123,35 @@ export function Game() {
 
   return (
     <div className="game-container">
+      {error && (
+        <div className="error-message">
+          {error}
+          <button 
+            className="error-close"
+            onClick={() => setError(null)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <div className="game-header">
         <div className="balance-card">
           <h2>当前余额</h2>
           <p className="balance">{balance.toFixed(2)} 元</p>
           <button 
-            className="btn btn-primary"
+            className={`btn btn-primary ${isDrawing ? 'loading' : ''}`}
             onClick={handleDraw}
             disabled={isDrawing || balance < TICKET_PRICE}
           >
-            {isDrawing ? '抽奖中...' : `购买刮刮乐 (${TICKET_PRICE}元)`}
+            {isDrawing ? (
+              <>
+                <span className="loading-spinner"></span>
+                生成中...
+              </>
+            ) : (
+              `购买刮刮乐 (${TICKET_PRICE}元)`
+            )}
           </button>
         </div>
 
@@ -127,6 +159,11 @@ export function Game() {
           <div className="last-drawn-card" style={{ borderColor: getRarityColor(lastDrawnNFT.rarity) }}>
             <h3>最新获得</h3>
             <div className="nft-card">
+              <img 
+                src={lastDrawnNFT.imageUrl} 
+                alt={lastDrawnNFT.name}
+                className="nft-image"
+              />
               <span 
                 className="nft-rarity" 
                 data-rarity={lastDrawnNFT.rarity}
@@ -197,6 +234,11 @@ export function Game() {
                 }
               }}
             >
+              <img 
+                src={nft.imageUrl} 
+                alt={nft.name}
+                className="nft-image"
+              />
               <span 
                 className="nft-rarity" 
                 data-rarity={nft.rarity}
@@ -218,7 +260,13 @@ export function Game() {
           <div className="modal-content">
             <h3>NFT详情</h3>
             <div className="nft-details">
+              <img 
+                src={selectedNFT.imageUrl} 
+                alt={selectedNFT.name}
+                className="nft-image-large"
+              />
               <p>稀有度: {selectedNFT.rarity}</p>
+              <p>宝石类型: {selectedNFT.gemType}</p>
               <p>名称: {selectedNFT.name}</p>
               <p>ID: {selectedNFT.id}</p>
             </div>

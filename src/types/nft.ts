@@ -7,10 +7,25 @@ export const NFTRarity = {
 
 export type NFTRarity = typeof NFTRarity[keyof typeof NFTRarity];
 
+export const GemType = {
+  RUBY: '红宝石',
+  SAPPHIRE: '蓝宝石',
+  EMERALD: '绿宝石',
+  DIAMOND: '钻石',
+  AMETHYST: '紫水晶',
+  TOPAZ: '黄玉',
+  PEARL: '珍珠',
+  JADE: '翡翠'
+} as const;
+
+export type GemType = typeof GemType[keyof typeof GemType];
+
 export interface NFT {
   id: string;
   name: string;
   rarity: NFTRarity;
+  gemType: GemType;
+  imageUrl: string;  // AI生成的图片URL
   price?: number;
 }
 
@@ -27,6 +42,18 @@ export const RARITY_PRICES = {
   [NFTRarity.EPIC]: 1000,
   [NFTRarity.LEGENDARY]: 5000
 };
+
+// 修改RARITY_PROBABILITIES，添加宝石类型的概率
+export const GEM_TYPE_PROBABILITIES = {
+  [GemType.RUBY]: 0.2,      // 20%
+  [GemType.SAPPHIRE]: 0.2,  // 20%
+  [GemType.EMERALD]: 0.15,  // 15%
+  [GemType.DIAMOND]: 0.1,   // 10%
+  [GemType.AMETHYST]: 0.15, // 15%
+  [GemType.TOPAZ]: 0.1,     // 10%
+  [GemType.PEARL]: 0.05,    // 5%
+  [GemType.JADE]: 0.05      // 5%
+} as const;
 
 // 合成规则
 export const SYNTHESIS_RULES = {

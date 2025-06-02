@@ -1,46 +1,49 @@
 import type { NFT } from '../types/nft';
-import { NFTRarity, RARITY_PROBABILITIES } from '../types/nft';
+import { NFTRarity, GemType, RARITY_PROBABILITIES, GEM_TYPE_PROBABILITIES } from '../types/nft';
+import { ImageGenerator } from './imageGenerator';
+
+function getRandomItem<T>(items: T[], probabilities: number[]): T {
+  const random = Math.random();
+  let sum = 0;
+  
+  for (let i = 0; i < probabilities.length; i++) {
+    sum += probabilities[i];
+    if (random < sum) {
+      return items[i];
+    }
+  }
+  
+  return items[items.length - 1];
+}
 
 export class LotterySystem {
-  private static generateId(): string {
-    return Math.random().toString(36).substring(2, 15);
-  }
+  public static async drawNFT(): Promise<NFT> {
+    // 随机选择稀有度
+    const rarities = Object.values(NFTRarity);
+    const rarityProbabilities = Object.values(RARITY_PROBABILITIES);
+    const rarity = getRandomItem(rarities, rarityProbabilities);
 
-  private static generateName(rarity: NFTRarity): string {
-    const prefixes = {
-      [NFTRarity.COMMON]: ['普通的', '平凡的', '普通的'],
-      [NFTRarity.RARE]: ['稀有的', '珍贵的', '罕见的'],
-      [NFTRarity.EPIC]: ['史诗的', '传奇的', '非凡的'],
-      [NFTRarity.LEGENDARY]: ['传说的', '神话的', '不朽的']
-    };
+    // 随机选择宝石类型
+    const gemTypes = Object.values(GemType);
+    const gemTypeProbabilities = Object.values(GEM_TYPE_PROBABILITIES);
+    const gemType = getRandomItem(gemTypes, gemTypeProbabilities);
 
-    const suffixes = ['宝石', '水晶', '钻石', '珍珠', '翡翠', '玛瑙', '红宝石', '蓝宝石'];
+    // 生成NFT ID
+    const id = `NFT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // 生成NFT名称
+    const name = `${rarity}${gemType} #${Date.now().toString().slice(-4)}`;
 
-    const prefix = prefixes[rarity][Math.floor(Math.random() * prefixes[rarity].length)];
-    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-    return `${prefix}${suffix}`;
-  }
+    // 生成NFT图片
+    const imageUrl = await ImageGenerator.generateNFTImage(rarity, gemType);
 
-  private static drawRarity(): NFTRarity {
-    const rand = Math.random();
-    let cumulativeProbability = 0;
-
-    for (const [rarity, probability] of Object.entries(RARITY_PROBABILITIES)) {
-      cumulativeProbability += probability;
-      if (rand <= cumulativeProbability) {
-        return rarity as NFTRarity;
-      }
-    }
-
-    return NFTRarity.COMMON;
-  }
-
-  static drawNFT(): NFT {
-    const rarity = this.drawRarity();
     return {
-      id: this.generateId(),
-      name: this.generateName(rarity),
-      rarity
+      id,
+      name,
+      rarity,
+      gemType,
+      imageUrl,
+      price: 0
     };
   }
 } 
