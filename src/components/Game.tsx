@@ -1,11 +1,54 @@
 import { useState } from 'react';
-import { LotterySystem } from '../utils/lottery';
 import { useGameStore } from '../store/gameStore';
 import type { NFT } from '../types/nft';
-import { NFTRarity, SYNTHESIS_RULES, getNextRarity } from '../types/nft';
+import { NFTRarity, SYNTHESIS_RULES } from '../types/nft';
+import { LotterySystem } from '../utils/lottery';
 import '../styles/game.css';
 
 const TICKET_PRICE = 100; // 每张刮刮乐100元
+
+const getRarityColor = (rarity: NFTRarity) => {
+  const colors: Record<NFTRarity, string> = {
+    [NFTRarity.Common]: 'var(--rarity-common)',
+    [NFTRarity.Rare]: 'var(--rarity-rare)',
+    [NFTRarity.Epic]: 'var(--rarity-epic)',
+    [NFTRarity.Legendary]: 'var(--rarity-legendary)'
+  };
+  return colors[rarity];
+};
+
+const NFTCard = ({ nft, onClick, isSelected }: { 
+  nft: NFT; 
+  onClick: () => void; 
+  isSelected?: boolean;
+}) => (
+  <div 
+    className={`nft-card ${isSelected ? 'selected' : ''}`}
+    style={{ borderColor: getRarityColor(nft.rarity) }}
+    onClick={onClick}
+  >
+    <div className="nft-image">
+      <img src={nft.imageUrl} alt={nft.name} />
+    </div>
+    <div className="nft-info">
+      <span className="nft-rarity" data-rarity={nft.rarity}>
+        {nft.rarity}
+      </span>
+      <h4>{nft.name}</h4>
+      <p className="nft-description">{nft.description}</p>
+    </div>
+    {isSelected && (
+      <div className="selection-indicator">已选择</div>
+    )}
+  </div>
+);
+
+interface SynthesisInfo {
+  current: number;
+  required: number;
+  cost: number;
+  nextRarity: NFTRarity | null;
+}
 
 export function Game() {
   const { 
@@ -25,33 +68,26 @@ export function Game() {
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [listPrice, setListPrice] = useState('');
   const [showSynthesis, setShowSynthesis] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleDraw = async () => {
     if (balance < TICKET_PRICE) {
-      setError('余额不足！');
+      alert('余额不足！');
       return;
     }
 
     setIsDrawing(true);
-    setError(null);
     updateBalance(-TICKET_PRICE);
 
     try {
       // 模拟抽奖动画
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      console.log('开始抽奖...');
       const nft = await LotterySystem.drawNFT();
-      console.log('抽奖成功:', nft);
-      
       addNFT(nft);
       setLastDrawnNFT(nft);
     } catch (error) {
-      console.error('抽奖失败:', error);
-      const errorMessage = error instanceof Error ? error.message : '抽奖失败，请稍后重试！';
-      setError(errorMessage);
-      updateBalance(TICKET_PRICE); // 退还抽奖费用
+      alert(error instanceof Error ? error.message : '抽奖失败！');
+      updateBalance(TICKET_PRICE); // 如果失败，返还金币
     } finally {
       setIsDrawing(false);
     }
@@ -69,17 +105,48 @@ export function Game() {
     setListPrice('');
   };
 
-  const handleSynthesis = async () => {
-    if (selectedForSynthesis.length === 0) return;
+  const getSynthesisInfo = (): SynthesisInfo => {
+    if (selectedForSynthesis.length === 0) {
+      return { current: 0, required: 3, cost: 0, nextRarity: null };
+    }
+
     const selectedNFTs = nfts.filter(nft => selectedForSynthesis.includes(nft.id));
-    if (selectedNFTs.length === 0) return;
+    if (selectedNFTs.length === 0) {
+      return { current: 0, required: 3, cost: 0, nextRarity: null };
+    }
 
     const rarity = selectedNFTs[0].rarity;
-    const rule = SYNTHESIS_RULES[rarity as keyof typeof SYNTHESIS_RULES];
-    if (!rule) return;
+    if (rarity === NFTRarity.Legendary) {
+      return { current: selectedNFTs.length, required: 3, cost: 0, nextRarity: null };
+    }
 
-    if (balance < rule.fee) {
-      alert('余额不足！');
+    const rule = SYNTHESIS_RULES[rarity as keyof typeof SYNTHESIS_RULES];
+    return {
+      current: selectedNFTs.length,
+      required: 3,
+      cost: rule.cost,
+      nextRarity: rule.target
+    };
+  };
+
+  const handleSynthesize = async () => {
+    if (selectedForSynthesis.length !== 3) {
+      alert('请选择3个相同稀有度的NFT进行合成');
+      return;
+    }
+
+    const selectedNFTs = nfts.filter(nft => selectedForSynthesis.includes(nft.id));
+    const rarity = selectedNFTs[0].rarity;
+    if (rarity === NFTRarity.Legendary) {
+      alert('传说级NFT无法合成');
+      return;
+    }
+
+    const rule = SYNTHESIS_RULES[rarity as keyof typeof SYNTHESIS_RULES];
+    const cost = rule.cost;
+
+    if (balance < cost) {
+      alert(`余额不足，合成需要${cost}元`);
       return;
     }
 
@@ -87,92 +154,33 @@ export function Game() {
       await synthesizeNFTs();
       alert('合成成功！');
       setShowSynthesis(false);
+      clearSynthesisSelection();
     } catch (error) {
-      alert(error instanceof Error ? error.message : '合成失败！');
+      alert('合成失败：' + (error instanceof Error ? error.message : String(error)));
     }
-  };
-
-  const getSynthesisInfo = () => {
-    if (selectedForSynthesis.length === 0) return null;
-    const selectedNFTs = nfts.filter(nft => selectedForSynthesis.includes(nft.id));
-    if (selectedNFTs.length === 0) return null;
-
-    const rarity = selectedNFTs[0].rarity;
-    const rule = SYNTHESIS_RULES[rarity as keyof typeof SYNTHESIS_RULES];
-    if (!rule) return null;
-
-    return {
-      current: selectedNFTs.length,
-      required: rule.required,
-      fee: rule.fee,
-      nextRarity: getNextRarity(rarity)
-    };
-  };
-
-  const getRarityColor = (rarity: NFTRarity) => {
-    const colors: Record<NFTRarity, string> = {
-      [NFTRarity.COMMON]: 'var(--rarity-common)',
-      [NFTRarity.RARE]: 'var(--rarity-rare)',
-      [NFTRarity.EPIC]: 'var(--rarity-epic)',
-      [NFTRarity.LEGENDARY]: 'var(--rarity-legendary)'
-    };
-    return colors[rarity];
   };
 
   const synthesisInfo = getSynthesisInfo();
 
   return (
     <div className="game-container">
-      {error && (
-        <div className="error-message">
-          {error}
-          <button 
-            className="error-close"
-            onClick={() => setError(null)}
-          >
-            ×
-          </button>
-        </div>
-      )}
-
       <div className="game-header">
         <div className="balance-card">
           <h2>当前余额</h2>
           <p className="balance">{balance.toFixed(2)} 元</p>
-          <button 
-            className={`btn btn-primary ${isDrawing ? 'loading' : ''}`}
+          <button
+            className="btn btn-primary"
             onClick={handleDraw}
             disabled={isDrawing || balance < TICKET_PRICE}
           >
-            {isDrawing ? (
-              <>
-                <span className="loading-spinner"></span>
-                生成中...
-              </>
-            ) : (
-              `购买刮刮乐 (${TICKET_PRICE}元)`
-            )}
+            {isDrawing ? '抽奖中...' : `购买刮刮乐 (${TICKET_PRICE}元)`}
           </button>
         </div>
 
         {lastDrawnNFT && (
           <div className="last-drawn-card" style={{ borderColor: getRarityColor(lastDrawnNFT.rarity) }}>
             <h3>最新获得</h3>
-            <div className="nft-card">
-              <img 
-                src={lastDrawnNFT.imageUrl} 
-                alt={lastDrawnNFT.name}
-                className="nft-image"
-              />
-              <span 
-                className="nft-rarity" 
-                data-rarity={lastDrawnNFT.rarity}
-              >
-                {lastDrawnNFT.rarity}
-              </span>
-              <h4>{lastDrawnNFT.name}</h4>
-              <p>ID: {lastDrawnNFT.id}</p>
-            </div>
+            <NFTCard nft={lastDrawnNFT} onClick={() => setSelectedNFT(lastDrawnNFT)} />
           </div>
         )}
       </div>
@@ -202,18 +210,21 @@ export function Game() {
             </ul>
           </div>
 
-          {synthesisInfo && (
+          {synthesisInfo.nextRarity ? (
             <div className="synthesis-info">
               <p>已选择: {synthesisInfo.current}/{synthesisInfo.required} 个{synthesisInfo.nextRarity}NFT</p>
-              <p>合成费用: {synthesisInfo.fee}元</p>
+              <p>合成费用: {synthesisInfo.cost}元</p>
               <button 
                 className="btn btn-primary"
-                onClick={handleSynthesis}
-                disabled={synthesisInfo.current !== synthesisInfo.required || balance < synthesisInfo.fee}
+                onClick={handleSynthesize}
+                disabled={synthesisInfo.current !== synthesisInfo.required || balance < synthesisInfo.cost}
               >
-                确认合成
+                合成 ({synthesisInfo.current}/{synthesisInfo.required})
+                {synthesisInfo.cost > 0 && ` - ${synthesisInfo.cost}元`}
               </button>
             </div>
+          ) : (
+            <p>请选择要合成的NFT</p>
           )}
         </div>
       )}
@@ -222,10 +233,9 @@ export function Game() {
         <h2>我的NFT收藏</h2>
         <div className="grid">
           {nfts.map(nft => (
-            <div 
-              key={nft.id} 
-              className={`nft-card ${showSynthesis ? 'selectable' : ''} ${selectedForSynthesis.includes(nft.id) ? 'selected' : ''}`}
-              style={{ borderColor: getRarityColor(nft.rarity) }}
+            <NFTCard
+              key={nft.id}
+              nft={nft}
               onClick={() => {
                 if (showSynthesis) {
                   toggleSynthesisSelection(nft.id);
@@ -233,24 +243,8 @@ export function Game() {
                   setSelectedNFT(nft);
                 }
               }}
-            >
-              <img 
-                src={nft.imageUrl} 
-                alt={nft.name}
-                className="nft-image"
-              />
-              <span 
-                className="nft-rarity" 
-                data-rarity={nft.rarity}
-              >
-                {nft.rarity}
-              </span>
-              <h4>{nft.name}</h4>
-              <p>ID: {nft.id}</p>
-              {showSynthesis && selectedForSynthesis.includes(nft.id) && (
-                <div className="selection-indicator">已选择</div>
-              )}
-            </div>
+              isSelected={selectedForSynthesis.includes(nft.id)}
+            />
           ))}
         </div>
       </div>
@@ -260,15 +254,12 @@ export function Game() {
           <div className="modal-content">
             <h3>NFT详情</h3>
             <div className="nft-details">
-              <img 
-                src={selectedNFT.imageUrl} 
-                alt={selectedNFT.name}
-                className="nft-image-large"
-              />
-              <p>稀有度: {selectedNFT.rarity}</p>
-              <p>宝石类型: {selectedNFT.gemType}</p>
-              <p>名称: {selectedNFT.name}</p>
-              <p>ID: {selectedNFT.id}</p>
+              <NFTCard nft={selectedNFT} onClick={() => {}} />
+              <div className="nft-info">
+                <p>稀有度: {selectedNFT.rarity}</p>
+                <p>主题: {selectedNFT.theme}</p>
+                <p>ID: {selectedNFT.id}</p>
+              </div>
             </div>
             <div className="modal-actions">
               <input

@@ -1,0 +1,330 @@
+{
+  "common": [
+    {
+      "id": "common_1",
+      "name": "树枝",
+      "theme": "branch",
+      "image": "/images/nft/common/branch.png",
+      "rarity": "common",
+      "description": "一根普通的树枝，自然的木质纹理"
+    },
+    {
+      "id": "common_2",
+      "name": "枯叶",
+      "theme": "leaf",
+      "image": "/images/nft/common/leaf.png",
+      "rarity": "common",
+      "description": "一片普通的枯叶，秋天的颜色"
+    },
+    {
+      "id": "common_3",
+      "name": "苔藓",
+      "theme": "moss",
+      "image": "/images/nft/common/moss.png",
+      "rarity": "common",
+      "description": "一片普通的苔藓，简单的绿色纹理"
+    },
+    {
+      "id": "common_4",
+      "name": "鹅卵石",
+      "theme": "pebble",
+      "image": "/images/nft/common/pebble.png",
+      "rarity": "common",
+      "description": "一颗普通的鹅卵石，光滑的灰色表面"
+    },
+    {
+      "id": "common_5",
+      "name": "贝壳",
+      "theme": "seashell",
+      "image": "/images/nft/common/seashell.png",
+      "rarity": "common",
+      "description": "一个普通的贝壳，带有自然的螺旋纹路"
+    },
+    {
+      "id": "common_6",
+      "name": "野花",
+      "theme": "wildflower",
+      "image": "/images/nft/common/wildflower.png",
+      "rarity": "common",
+      "description": "一朵普通的野花，自然的色彩"
+    },
+    {
+      "id": "common_7",
+      "name": "沙子",
+      "theme": "sand",
+      "image": "/images/nft/common/sand.png",
+      "rarity": "common",
+      "description": "一把普通的沙子，细腻的颗粒"
+    },
+    {
+      "id": "common_8",
+      "name": "土壤",
+      "theme": "soil",
+      "image": "/images/nft/common/soil.png",
+      "rarity": "common",
+      "description": "一捧普通的土壤，肥沃的质地"
+    },
+    {
+      "id": "common_9",
+      "name": "杂草",
+      "theme": "weed",
+      "image": "/images/nft/common/weed.png",
+      "rarity": "common",
+      "description": "一株普通的杂草，顽强的生命力"
+    },
+    {
+      "id": "common_10",
+      "name": "木棍",
+      "theme": "stick",
+      "image": "/images/nft/common/stick.png",
+      "rarity": "common",
+      "description": "一根普通的木棍，简单的形状"
+    }
+  ],
+  "rare": [
+    {
+      "id": "rare_1",
+      "name": "水晶",
+      "theme": "crystal",
+      "image": "/images/nft/rare/crystal.png",
+      "rarity": "rare",
+      "description": "一块珍贵的水晶，透明，几何刻面"
+    },
+    {
+      "id": "rare_2",
+      "name": "玛瑙",
+      "theme": "agate",
+      "image": "/images/nft/rare/agate.png",
+      "rarity": "rare",
+      "description": "一块珍贵的玛瑙，带有条纹图案，抛光表面"
+    },
+    {
+      "id": "rare_3",
+      "name": "珍珠",
+      "theme": "pearl",
+      "image": "/images/nft/rare/pearl.png",
+      "rarity": "rare",
+      "description": "一颗珍贵的珍珠，圆润光泽，温润如玉"
+    },
+    {
+      "id": "rare_4",
+      "name": "琥珀",
+      "theme": "amber",
+      "image": "/images/nft/rare/amber.png",
+      "rarity": "rare",
+      "description": "一块珍贵的琥珀，内含远古生物，金色光泽"
+    },
+    {
+      "id": "rare_5",
+      "name": "翡翠",
+      "theme": "jade",
+      "image": "/images/nft/rare/jade.png",
+      "rarity": "rare",
+      "description": "一块珍贵的翡翠，翠绿通透，温润细腻"
+    },
+    {
+      "id": "rare_6",
+      "name": "红宝石",
+      "theme": "ruby",
+      "image": "/images/nft/rare/ruby.png",
+      "rarity": "rare",
+      "description": "一颗珍贵的红宝石，深红色泽，闪耀光芒"
+    },
+    {
+      "id": "rare_7",
+      "name": "蓝宝石",
+      "theme": "sapphire",
+      "image": "/images/nft/rare/sapphire.png",
+      "rarity": "rare",
+      "description": "一颗珍贵的蓝宝石，深邃蓝色，星光闪耀"
+    },
+    {
+      "id": "rare_8",
+      "name": "祖母绿",
+      "theme": "emerald",
+      "image": "/images/nft/rare/emerald.png",
+      "rarity": "rare",
+      "description": "一颗珍贵的祖母绿，翠绿通透，光芒四射"
+    },
+    {
+      "id": "rare_9",
+      "name": "紫水晶",
+      "theme": "amethyst",
+      "image": "/images/nft/rare/amethyst.png",
+      "rarity": "rare",
+      "description": "一颗珍贵的紫水晶，紫色透明，神秘光芒"
+    },
+    {
+      "id": "rare_10",
+      "name": "黄玉",
+      "theme": "topaz",
+      "image": "/images/nft/rare/topaz.png",
+      "rarity": "rare",
+      "description": "一颗珍贵的黄玉，金黄色泽，温暖光芒"
+    }
+  ],
+  "epic": [
+    {
+      "id": "epic_1",
+      "name": "天琴",
+      "theme": "harp",
+      "image": "/images/nft/epic/harp.png",
+      "rarity": "epic",
+      "description": "一把天界竖琴，金色琴弦，星光共鸣"
+    },
+    {
+      "id": "epic_2",
+      "name": "独角兽之角",
+      "theme": "horn",
+      "image": "/images/nft/epic/horn.png",
+      "rarity": "epic",
+      "description": "一根神秘的独角兽之角，螺旋纹路，彩虹光环"
+    },
+    {
+      "id": "epic_3",
+      "name": "水晶球",
+      "theme": "orb",
+      "image": "/images/nft/epic/orb.png",
+      "rarity": "epic",
+      "description": "一个传奇的水晶球，内部旋转着魔法雾气"
+    },
+    {
+      "id": "epic_4",
+      "name": "凤凰",
+      "theme": "phoenix",
+      "image": "/images/nft/epic/phoenix.png",
+      "rarity": "epic",
+      "description": "一只神秘的凤凰，展开雄伟的翅膀，金色火焰"
+    },
+    {
+      "id": "epic_5",
+      "name": "人鱼鳞片",
+      "theme": "scale",
+      "image": "/images/nft/epic/scale.png",
+      "rarity": "epic",
+      "description": "一片传奇的人鱼鳞片，彩虹光泽，海洋魔法"
+    },
+    {
+      "id": "epic_6",
+      "name": "魔法箭矢",
+      "theme": "arrow",
+      "image": "/images/nft/epic/arrow.png",
+      "rarity": "epic",
+      "description": "一支传奇的魔法箭矢，闪耀着元素光芒"
+    },
+    {
+      "id": "epic_7",
+      "name": "魔法指南针",
+      "theme": "compass",
+      "image": "/images/nft/epic/compass.png",
+      "rarity": "epic",
+      "description": "一个神秘的魔法指南针，指向命运的方向"
+    },
+    {
+      "id": "epic_8",
+      "name": "魔法书",
+      "theme": "grimoire",
+      "image": "/images/nft/epic/grimoire.png",
+      "rarity": "epic",
+      "description": "一本古老的魔法书，记载着失传的咒语"
+    },
+    {
+      "id": "epic_9",
+      "name": "天使之羽",
+      "theme": "feather",
+      "image": "/images/nft/epic/feather.png",
+      "rarity": "epic",
+      "description": "一根天使的羽毛，散发着圣洁的光芒"
+    },
+    {
+      "id": "epic_10",
+      "name": "龙蛋",
+      "theme": "egg",
+      "image": "/images/nft/epic/egg.png",
+      "rarity": "epic",
+      "description": "一颗神秘的龙蛋，表面覆盖着鳞片纹路"
+    }
+  ],
+  "legendary": [
+    {
+      "id": "legendary_1",
+      "name": "启示之刃",
+      "theme": "blade",
+      "image": "/images/nft/legendary/Blade of Revelation.png",
+      "rarity": "legendary",
+      "description": "一把传奇的金色长剑，闪耀着神圣的光芒"
+    },
+    {
+      "id": "legendary_2",
+      "name": "混沌宝箱",
+      "theme": "chest",
+      "image": "/images/nft/legendary/Chest of Chaos.png",
+      "rarity": "legendary",
+      "description": "一个金色的混沌宝箱，被黑暗锁链束缚"
+    },
+    {
+      "id": "legendary_3",
+      "name": "永恒圣杯",
+      "theme": "grail",
+      "image": "/images/nft/legendary/Grail of Eternity.png",
+      "rarity": "legendary",
+      "description": "一个发光的金色圣杯，盛满星光液体"
+    },
+    {
+      "id": "legendary_4",
+      "name": "星界裂隙",
+      "theme": "rift",
+      "image": "/images/nft/legendary/Rift of Stars.png",
+      "rarity": "legendary",
+      "description": "一个宇宙裂隙神器，内部旋转着星系和星辰"
+    },
+    {
+      "id": "legendary_5",
+      "name": "天空守护者",
+      "theme": "guardian",
+      "image": "/images/nft/legendary/Guardian of the Skies.png",
+      "rarity": "legendary",
+      "description": "一面带翼的金色盾牌，闪耀着蓝色能量"
+    },
+    {
+      "id": "legendary_6",
+      "name": "深渊审判",
+      "theme": "judgment",
+      "image": "/images/nft/legendary/Judgment of the Abyss.png",
+      "rarity": "legendary",
+      "description": "一把巨大的金色巨剑，被深渊火焰吞噬"
+    },
+    {
+      "id": "legendary_7",
+      "name": "时空之钥",
+      "theme": "key",
+      "image": "/images/nft/legendary/Key of Time and Space.png",
+      "rarity": "legendary",
+      "description": "一把金色的奥术钥匙，漂浮在时空漩涡中"
+    },
+    {
+      "id": "legendary_8",
+      "name": "冥界魂棺",
+      "theme": "casket",
+      "image": "/images/nft/legendary/Soul Casket of Nether.png",
+      "rarity": "legendary",
+      "description": "一个幽灵般的金色棺材，雾气与发光灵魂逸出"
+    },
+    {
+      "id": "legendary_9",
+      "name": "龙焰长矛",
+      "theme": "glaive",
+      "image": "/images/nft/legendary/Drakefire Glaive.png",
+      "rarity": "legendary",
+      "description": "一把传奇的战矛，金色和深红色的龙纹装饰"
+    },
+    {
+      "id": "legendary_10",
+      "name": "虚空核心",
+      "theme": "core",
+      "image": "/images/nft/legendary/Core of the Void.png",
+      "rarity": "legendary",
+      "description": "一个金色的虚空水晶，脉动着紫黑色能量"
+    }
+  ]
+} 

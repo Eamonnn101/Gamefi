@@ -6,8 +6,15 @@ import '../styles/market.css';
 
 const MARKET_FEE_RATE = 0.025; // 2.5% 市场手续费
 
+const RARITY_COLORS = {
+  [NFTRarity.Common]: 'var(--rarity-common)',
+  [NFTRarity.Rare]: 'var(--rarity-rare)',
+  [NFTRarity.Epic]: 'var(--rarity-epic)',
+  [NFTRarity.Legendary]: 'var(--rarity-legendary)'
+};
+
 export function Market() {
-  const { balance, marketListings, buyNFT, unlistNFT } = useGameStore();
+  const { balance, listedNFTs, buyNFT } = useGameStore();
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [showFeeInfo, setShowFeeInfo] = useState(false);
 
@@ -37,21 +44,8 @@ export function Market() {
     }
   };
 
-  const handleUnlist = (nft: NFT) => {
-    if (confirm(`确定要下架 ${nft.name} 吗？`)) {
-      unlistNFT(nft.id);
-      alert('下架成功！');
-    }
-  };
-
   const getRarityColor = (rarity: NFTRarity) => {
-    const colors: Record<NFTRarity, string> = {
-      [NFTRarity.COMMON]: 'var(--rarity-common)',
-      [NFTRarity.RARE]: 'var(--rarity-rare)',
-      [NFTRarity.EPIC]: 'var(--rarity-epic)',
-      [NFTRarity.LEGENDARY]: 'var(--rarity-legendary)'
-    };
-    return colors[rarity];
+    return RARITY_COLORS[rarity];
   };
 
   return (
@@ -79,19 +73,22 @@ export function Market() {
       )}
 
       <div className="market-grid">
-        {marketListings.length === 0 ? (
+        {listedNFTs.length === 0 ? (
           <div className="empty-state">
             <p>市场暂无NFT</p>
           </div>
         ) : (
           <div className="grid">
-            {marketListings.map(nft => (
+            {listedNFTs.map(nft => (
               <div 
                 key={nft.id}
                 className="nft-card"
                 style={{ borderColor: getRarityColor(nft.rarity) }}
                 onClick={() => setSelectedNFT(nft)}
               >
+                <div className="nft-image">
+                  <img src={nft.imageUrl} alt={nft.name} />
+                </div>
                 <span 
                   className="nft-rarity" 
                   data-rarity={nft.rarity}
@@ -99,7 +96,7 @@ export function Market() {
                   {nft.rarity}
                 </span>
                 <h4>{nft.name}</h4>
-                <p>ID: {nft.id}</p>
+                <p className="nft-description">{nft.description}</p>
                 <p className="price">{nft.price?.toFixed(2)} 元</p>
                 <div className="card-actions">
                   <button 
@@ -111,15 +108,6 @@ export function Market() {
                     disabled={!nft.price || balance < nft.price}
                   >
                     购买
-                  </button>
-                  <button 
-                    className="btn btn-danger"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleUnlist(nft);
-                    }}
-                  >
-                    下架
                   </button>
                 </div>
               </div>
@@ -133,17 +121,23 @@ export function Market() {
           <div className="modal-content">
             <h3>NFT详情</h3>
             <div className="nft-details">
-              <p>稀有度: {selectedNFT.rarity}</p>
-              <p>名称: {selectedNFT.name}</p>
-              <p>ID: {selectedNFT.id}</p>
-              <p className="price">价格: {selectedNFT.price?.toFixed(2)} 元</p>
-              {selectedNFT.price && (
-                <div className="fee-details">
-                  <p>买家支付: {selectedNFT.price.toFixed(2)} 元</p>
-                  <p>手续费 (2.5%): {(selectedNFT.price * MARKET_FEE_RATE).toFixed(2)} 元</p>
-                  <p>卖家获得: {(selectedNFT.price * (1 - MARKET_FEE_RATE)).toFixed(2)} 元</p>
-                </div>
-              )}
+              <div className="nft-image">
+                <img src={selectedNFT.imageUrl} alt={selectedNFT.name} />
+              </div>
+              <div className="nft-info">
+                <p>稀有度: {selectedNFT.rarity}</p>
+                <p>名称: {selectedNFT.name}</p>
+                <p>描述: {selectedNFT.description}</p>
+                <p>ID: {selectedNFT.id}</p>
+                <p className="price">价格: {selectedNFT.price?.toFixed(2)} 元</p>
+                {selectedNFT.price && (
+                  <div className="fee-details">
+                    <p>买家支付: {selectedNFT.price.toFixed(2)} 元</p>
+                    <p>手续费 (2.5%): {(selectedNFT.price * MARKET_FEE_RATE).toFixed(2)} 元</p>
+                    <p>卖家获得: {(selectedNFT.price * (1 - MARKET_FEE_RATE)).toFixed(2)} 元</p>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="modal-actions">
               <button 
@@ -152,12 +146,6 @@ export function Market() {
                 disabled={!selectedNFT.price || balance < selectedNFT.price}
               >
                 确认购买
-              </button>
-              <button 
-                className="btn btn-danger"
-                onClick={() => handleUnlist(selectedNFT)}
-              >
-                下架
               </button>
               <button 
                 className="btn"
